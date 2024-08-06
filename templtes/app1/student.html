@@ -1,0 +1,75 @@
+{% extends 'app1/base.html' %} {% block content %}
+
+<div class="container col-md-8 center pb-5">
+  <h3>Adding Student</h3>
+  <div class="container col-md-6 center mt-5">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <table>
+        {{form.as_p}}
+      </table>
+      <input type="submit" class="btn btn-success" value="Add Student" />
+
+      <input type="reset" class="btn btn-warning" value="Cancel" />
+    </form>
+  </div>
+
+  <table class="table table-striped table-hover  mt-5 ">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Class</th>
+        <th scope="col">Image</th>
+        <th scope="col">Video</th>
+        <th scope="col">operation</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for student in students %}
+
+      <tr>
+        <th>{{ forloop.counter }}</th>
+        <td>{{ student.name }}</td>
+        <td>{{ student.inclass }}</td>
+        <!-- if image is not present you will get error -->
+
+        <td>
+          {% if student.image %}
+          <img
+            src="{{student.image.url}}"
+            alt="image"
+            style="height: 100px; width: 100px"
+          />
+          {% else %}
+          <h3>Not Provided</h3>
+          {% endif %}
+        </td>
+        <td>
+          {% if student.video %}
+          <video controls="controls" style="height: 200px; width: 200px">
+            <source src="{{student.video.url}}" type="video/mp4" />
+          </video>
+          {% else %}
+          <h3>Not Provided</h3>
+          {% endif %}
+        </td>
+
+        <td>
+          <a href="{% url 'editstudent' student.id %}" class="btn btn-warning">
+            Edit
+          </a>
+          <a
+            href=" {% url 'delete_student' student.id %}"
+            class="btn btn-danger"
+            >Delete</a
+          >
+        </td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
